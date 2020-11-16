@@ -4,8 +4,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import { Link } from 'react-router-dom';
 
 import useStyles from './styles';
 
@@ -61,16 +61,16 @@ const PrimarySearchAppBar = ({ handleDrawerToggle }) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
+      {/* <MenuItem>
+        <IconButton component={Link} to="/cart" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
             <FavoriteIcon />
           </Badge>
         </IconButton>
         <p>Wishlist</p>
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
+        <IconButton component={Link} to="/cart" aria-label="show 11 new notifications" color="inherit">
           <Badge badgeContent={11} color="secondary">
             <ShoppingCartIcon />
           </Badge>
@@ -113,12 +113,12 @@ const PrimarySearchAppBar = ({ handleDrawerToggle }) => {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
+            {/* <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <FavoriteIcon />
               </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            </IconButton> */}
+            <IconButton component={Link} to="/cart" aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
