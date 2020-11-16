@@ -66,7 +66,7 @@ const App = () => {
     <Router>
       <div className={classes.root}>
         <CssBaseline />
-        <Navbar handleDrawerToggle={handleDrawerToggle} />
+        <Navbar totalItems={cart.total_items} handleDrawerToggle={handleDrawerToggle} />
         <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
         <Switch>
           <Route exact path="/">

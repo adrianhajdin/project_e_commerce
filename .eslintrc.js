@@ -39,6 +39,7 @@ module.exports = {
         maxEOF: 1,
       },
     ],
+    'camelcase': 0,
     'no-underscore-dangle': [
       'error',
       {
