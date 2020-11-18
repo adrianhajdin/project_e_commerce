@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useHistory } from 'react-router-dom';
 
-import { Navbar, Sidebar, Products, Cart } from './components';
+import { Navbar, Sidebar, Products, Cart, Checkout, Confirmation } from './components';
 import { commerce } from './lib/commerce';
 
 const useStyles = makeStyles(() => ({
@@ -15,9 +15,11 @@ const useStyles = makeStyles(() => ({
 const App = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const classes = useStyles();
+  const history = useHistory();
 
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState({});
+  const [order, setOrder] = useState({});
 
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
@@ -53,6 +55,26 @@ const App = () => {
     setCart(response.cart);
   };
 
+  const refreshCart = async () => {
+    const newCart = await commerce.cart.refresh();
+
+    setCart(newCart);
+  };
+
+  const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
+    const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder);
+    console.log(incomingOrder);
+    setOrder(incomingOrder);
+
+    // Clear the cart
+    refreshCart();
+    // Send the user to the receipt
+    history.push('/home');
+    // Store the order in session storage so we can show it again if the
+    // user refreshes the page!
+    window.sessionStorage.setItem('order_receipt', JSON.stringify(order));
+  };
+
   useEffect(() => {
     fetchProducts();
     fetchCart();
@@ -73,13 +95,31 @@ const App = () => {
             <Products products={products} onAddToCart={handleAddToCart} handleUpdateCartQty />
           </Route>
           <Route exact path="/cart">
-            <Cart
-              cart={cart}
-              onUpdateCartQty={handleUpdateCartQty}
-              onRemoveFromCart={handleRemoveFromCart}
-              onEmptyCart={handleEmptyCart}
-            />
+            <Cart cart={cart} onUpdateCartQty={handleUpdateCartQty} onRemoveFromCart={handleRemoveFromCart} onEmptyCart={handleEmptyCart} />
           </Route>
+          <Route path="/checkout" exact>
+            <Checkout
+              history={history}
+              cart={cart}
+              onCaptureCheckout={handleCaptureCheckout}
+            />
+
+          </Route>
+          <Route
+            path="/confirmation"
+            exact
+            render={(props) => {
+              if (!order) {
+                return props.history.push('/');
+              }
+              return (
+                <Confirmation
+                  {...props}
+                  order={order}
+                />
+              );
+            }}
+          />
         </Switch>
       </div>
     </Router>
