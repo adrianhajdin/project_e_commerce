@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route, useHistory } from 'react-router-dom';
 
-import { Navbar, Sidebar, Products, Cart, Checkout, Confirmation } from './components';
+import { Navbar, Sidebar, Products, Cart, Checkout, Checkout1, Confirmation } from './components';
 import { commerce } from './lib/commerce';
 
 const useStyles = makeStyles(() => ({
@@ -103,8 +103,18 @@ const App = () => {
               cart={cart}
               onCaptureCheckout={handleCaptureCheckout}
             />
-
           </Route>
+          <Route
+            path="/checkout"
+            exact
+            render={(props) => (
+              <Checkout
+                {...props}
+                cart={cart}
+                onCaptureCheckout={handleCaptureCheckout}
+              />
+            )}
+          />
           <Route
             path="/confirmation"
             exact

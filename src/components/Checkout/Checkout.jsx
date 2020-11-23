@@ -31,79 +31,71 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
     shippingOption: '',
   });
 
-  const generateCheckoutToken = async () => {
-    if (cart.line_items.length) {
-      const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' });
-      setState({ ...state, checkoutToken: token });
+  const fetchShippingCountries = async (checkoutTokenId) => {
+    const countries = await commerce.services.localeListShippingCountries(checkoutTokenId);
 
-      await fetchShippingCountries(token.id);
-      await fetchShippingOptions(token.id, state.shippingCountry, state.shippingStateProvince);
+    console.log(countries);
+
+    setState({ ...state, shippingCountries: countries.countries });
+
+    // return countries.countries;
+  };
+
+  const fetchSubdivisions = async (countryCode) => {
+    const subdivisions = await commerce.services.localeListSubdivisions(countryCode);
+
+    console.log(subdivisions);
+
+    setState({ ...state, shippingSubdivisions: subdivisions.subdivisions });
+  };
+
+  const fetchShippingOptions = async (checkoutTokenId, country, stateProvince = null) => {
+    console.log(checkoutTokenId, country, stateProvince);
+    const options = await commerce.checkout.getShippingOptions(checkoutTokenId, { country, region: stateProvince });
+    const shippingOption = options[0] || null;
+
+    console.log(options, shippingOption);
+
+    setState({ ...state, shippingOption, shippingOptions: options });
+  };
+  let tokenn = null;
+
+  const generateCheckoutToken = () => {
+    if (cart.line_items.length) {
+      return commerce.checkout.generateToken(cart.id, { type: 'cart' })
+        .then((token) => {
+          setState({ ...state, checkoutToken: token });
+          console.log(1, token);
+          tokenn = token;
+        })
+        .then(() => {
+          console.log(2, tokenn);
+          console.log(2, state.checkoutToken);
+          fetchShippingCountries(tokenn.id);
+        })
+        .catch((error) => {
+          console.log('There was an error in generating a token', error);
+        });
     }
   };
 
   useEffect(() => {
-    const doSomething = async () => {
-      await generateCheckoutToken();
+    console.log(1, state.checkoutToken);
+    generateCheckoutToken().then(() => fetchSubdivisions(state.shippingCountry)).then(() => fetchShippingOptions(tokenn.id, state.shippingCountry, state.shippingStateProvince));
+    console.log(2, state.checkoutToken);
+  }, []);
 
-      fetchSubdivisions(state.shippingCountry);
-    };
+  //   useEffect(() => {
+  //     console.log('SUCKS', state.checkoutToken);
+  //     console.log('ROCKS', tokenn);
 
-    doSomething();
-    // fetchShippingOptions(state);
-  }, [state.shippingCountries, state.shippingSubdivisions, state.shippingOptions, state.shippingOption]);
+  //     fetchShippingOptions(tokenn.id, state.shippingCountry, state.shippingStateProvince);
+  //     console.log(4, state.checkoutToken);
+  //   }, [state.shippingCountry]);
 
-  if (!cart.line_items) return 'Loading';
+  const handleFormChanges = (e) => setState({ ...state, [e.target.name]: e.target.value });
 
-  const fetchShippingCountries = (checkoutTokenId) => {
-    commerce.services.localeListShippingCountries(checkoutTokenId).then((countries) => {
-      if (!state.shippingCountries.length) {
-        setState({ ...state,
-          shippingCountries: countries.countries,
-        });
-      }
-    }).catch((error) => {
-      console.log('There was an error fetching a list of shipping countries', error);
-    });
-  };
-
-  const fetchSubdivisions = (countryCode) => {
-    commerce.services.localeListSubdivisions(countryCode).then((subdivisions) => {
-      if (!state.shippingSubdivisions.length) {
-        setState({ ...state,
-          shippingSubdivisions: subdivisions.subdivisions,
-        });
-      }
-    }).catch((error) => {
-      console.log('There was an error fetching the subdivisions', error);
-    });
-  };
-
-  const fetchShippingOptions = (checkoutTokenId, country, stateProvince = null) => {
-    commerce.checkout.getShippingOptions(checkoutTokenId,
-      {
-        country,
-        region: stateProvince,
-      }).then((options) => {
-      // Pre-select the first available method
-      const shippingOption = options[0] || null;
-      if (!state.shippingOptions.length) {
-        setState({ ...state,
-          shippingOption,
-          shippingOptions: options,
-        });
-      }
-    }).catch((error) => {
-      console.log('There was an error fetching the shipping methods', error);
-    });
-  };
-
-  const handleFormChanges = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
-
-  const handleShippingCountryChange = (e) => {
-    fetchSubdivisions(e.target.value);
-  };
+  const handleShippingCountryChange = (e) => fetchSubdivisions(e.target.value);
 
   const handleCaptureCheckout = (e) => {
     e.preventDefault();
@@ -138,15 +130,13 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
       },
     };
 
-    console.log(state.checkoutToken.id, orderData, history);
-
     onCaptureCheckout(state.checkoutToken.id, orderData);
 
     history.push('/confirmation');
   };
 
   const renderCheckoutForm = () => {
-    const { shippingCountries, shippingSubdivisions, shippingOptions } = state;
+    console.log('STATE', state);
 
     return (
       <form className="checkout__form" onChange={handleFormChanges}>
@@ -176,49 +166,21 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
         <input className="checkout__input" type="text" onChange={handleFormChanges} value={state.shippingPostalZipCode} name="shippingPostalZipCode" placeholder="Enter your postal/zip code" required />
 
         <label className="checkout__label" htmlFor="shippingCountry">Country</label>
-        <select
-          value={state.shippingCountry}
-          name="shippingCountry"
-          onChange={handleShippingCountryChange}
-          className="checkout__select"
-        >
+        <select value={state.shippingCountry} name="shippingCountry" onChange={handleShippingCountryChange} className="checkout__select">
           <option disabled>Country</option>
-          {
-                        Object.keys(shippingCountries).map((index) => (
-                          <option value={index} key={index}>{shippingCountries[index]}</option>
-                        ))
-                    };
+          {Object.keys(state.shippingCountries).map((index) => <option value={index} key={index}>{state.shippingCountries[index]}</option>)}
         </select>
 
         <label className="checkout__label" htmlFor="shippingStateProvince">State/province</label>
-        <select
-          value={state.shippingStateProvince}
-          name="shippingStateProvince"
-          onChange={handleFormChanges}
-          className="checkout__select"
-        >
+        <select value={state.shippingStateProvince} name="shippingStateProvince" onChange={handleFormChanges} className="checkout__select">
           <option className="checkout__option" disabled>State/province</option>
-          {
-                        Object.keys(shippingSubdivisions).map((index) => (
-                          <option value={index} key={index}>{shippingSubdivisions[index]}</option>
-                        ))
-                    };
-
+          {Object.keys(state.shippingSubdivisions).map((index) => <option value={index} key={index}>{state.shippingSubdivisions[index]}</option>)}
         </select>
 
         <label className="checkout__label" htmlFor="shippingOption">Shipping method</label>
-        <select
-          value={state.shippingOption.id}
-          name="shippingOption"
-          onChange={handleFormChanges}
-          className="checkout__select"
-        >
+        <select value={state.shippingOption.id} name="shippingOption" onChange={handleFormChanges} className="checkout__select">
           <option className="checkout__select-option" disabled>Select a shipping method</option>
-          {
-                        shippingOptions.map((method, index) => (
-                          <option className="checkout__select-option" value={method.id} key={index}>{`${method.description} - $${method.price.formatted_with_code}` }</option>
-                        ))
-                    };
+          {state.shippingOptions.map((method, index) => <option className="checkout__select-option" value={method.id} key={index}>{`${method.description} - $${method.price.formatted_with_code}` }</option>)};
         </select>
 
         <h4 className="checkout__subheading">Payment information</h4>
@@ -235,7 +197,7 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
         <label className="checkout__label" htmlFor="ccv">CCV</label>
         <input className="checkout__input" type="text" name="ccv" onChange={handleFormChanges} value={state.ccv} placeholder="CCV (3 digits)" />
 
-        <button onClick={handleCaptureCheckout} className="checkout__btn-confirm">Confirm order</button>
+        <button type="button" onClick={handleCaptureCheckout} className="checkout__btn-confirm">Confirm order</button>
       </form>
     );
   };
@@ -262,6 +224,8 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
       </div>
     </>
   );
+
+  if (!cart.line_items) return 'Loading';
 
   return (
     <div className="checkout">
