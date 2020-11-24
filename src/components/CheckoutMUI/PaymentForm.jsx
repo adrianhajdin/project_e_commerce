@@ -2,8 +2,8 @@ import React from 'react';
 import { Typography, Button, Divider } from '@material-ui/core';
 import { Elements, CardElement, ElementsConsumer } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+
 import Review from './Review';
-import { commerce } from '../../lib/commerce';
 
 const stripePromise = loadStripe('pk_test_51Hqmw9EnylLNWUqjZhGaG1ipWYADqMvDACswXeMX1ZYEe5PwGEh1xmtmJgYZkZMigJaROV3k5ZYPl22gBaWgJReS00xo3zab3y');
 
@@ -30,21 +30,11 @@ const PaymentForm = ({ checkoutToken, nextStep, shippingData, onCaptureCheckout 
           stripe: {
             payment_method_id: paymentMethod.id,
           },
-        //   card: { number: paymentMethod.card.last4, expiry_month: paymentMethod.card.exp_month, expiry_year: paymentMethod.card.exp_year, cvc: this.state.ccv, postal_zip_code: shippingData.zip },
         },
       };
 
-      //   const order = await commerce.checkout.capture(checkoutTokenId, {
-      //       ...orderDetails,
-      //     payment: {
-      //       gateway: 'stripe',
-      //       stripe: {
-      //         payment_method_id: paymentMethodResponse.paymentMethod.id,
-      //       },
-      //     },
-      //   })
-
       onCaptureCheckout(checkoutToken.id, orderData);
+
       nextStep();
     }
   };

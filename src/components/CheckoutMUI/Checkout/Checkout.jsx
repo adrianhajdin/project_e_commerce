@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CssBaseline, Paper, Stepper, Step, StepLabel, Button, Link, Typography } from '@material-ui/core';
-
+import { CssBaseline, Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 import useStyles from './styles';
@@ -8,19 +8,11 @@ import { commerce } from '../../../lib/commerce';
 
 const steps = ['Shipping address', 'Payment details'];
 
-const getStepContent = (step, checkoutToken, nextStep, setShippingData, shippingData, test, onCaptureCheckout) => {
-  switch (step) {
-    case 0: return <AddressForm checkoutToken={checkoutToken} nextStep={nextStep} setShippingData={setShippingData} test={test} />;
-    case 1: return <PaymentForm checkoutToken={checkoutToken} nextStep={nextStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout} />;
-    default: throw new Error('Unknown step');
-  }
-};
-
 const Checkout = ({ cart, onCaptureCheckout, order }) => {
   const [checkoutToken, setCheckoutToken] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
-  const classes = useStyles();
   const [shippingData, setShippingData] = useState({});
+  const classes = useStyles();
 
   const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
@@ -37,11 +29,26 @@ const Checkout = ({ cart, onCaptureCheckout, order }) => {
   }, [cart]);
 
   const test = (data) => {
-    console.log(data);
-
     setShippingData(data);
+
     nextStep();
   };
+
+  const Confirmation = () => (order.customer ? (
+    <div>
+      <div>
+        <Typography variant="h5">Thank you for your purchase, {order?.customer?.firstname} {order?.customer?.lastname}!</Typography>
+        <Divider style={{ margin: '20px 0' }} />
+        <Typography variant="subtitle2">Order ref: {order?.customer_reference}</Typography>
+      </div>
+      <br />
+      <Typography component={Link} variant="subtitle1" type="button" to="/">Back to home</Typography>
+    </div>
+  ) : <CircularProgress />);
+
+  const Form = () => (activeStep === 0
+    ? <AddressForm checkoutToken={checkoutToken} nextStep={nextStep} setShippingData={setShippingData} test={test} />
+    : <PaymentForm checkoutToken={checkoutToken} nextStep={nextStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout} />);
 
   return (
     <>
@@ -57,19 +64,11 @@ const Checkout = ({ cart, onCaptureCheckout, order }) => {
             ))}
           </Stepper>
           <>
-            {activeStep === steps.length ? (
-              <div>
-                <div>
-                  <Typography variant="h4">Thank you for your purchase, {order?.customer?.firstname} {order?.customer?.lastname}!</Typography>
-                  <Typography variant="subtitle2">Order ref: {order?.customer_reference}</Typography>
-                </div>
-                <Typography variant="subtitle1" component={Link} type="button" to="/">Back to home</Typography>
-              </div>
-            ) : (
-              <>
-                {checkoutToken ? getStepContent(activeStep, checkoutToken, nextStep, setShippingData, shippingData, test, onCaptureCheckout) : null}
-              </>
-            )}
+            {
+            activeStep === steps.length
+              ? <Confirmation />
+              : checkoutToken && <Form />
+            }
           </>
         </Paper>
       </main>

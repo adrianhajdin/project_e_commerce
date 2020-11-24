@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import { Navbar, Sidebar, Products, Cart, Checkout, Checkout1, CheckoutMUI, Confirmation } from './components';
+import { Navbar, Products, Cart, Checkout } from './components';
 import { commerce } from './lib/commerce';
 
 const useStyles = makeStyles(() => ({
@@ -14,11 +14,10 @@ const useStyles = makeStyles(() => ({
 
 const App = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const classes = useStyles();
-
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState({});
   const [order, setOrder] = useState({});
+  const classes = useStyles();
 
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
@@ -62,10 +61,9 @@ const App = () => {
 
   const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
     const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder);
-    console.log(incomingOrder);
+
     setOrder(incomingOrder);
 
-    // Clear the cart
     refreshCart();
     // Send the user to the receipt
     // Store the order in session storage so we can show it again if the
@@ -85,7 +83,6 @@ const App = () => {
       <div className={classes.root}>
         <CssBaseline />
         <Navbar totalItems={cart.total_items} handleDrawerToggle={handleDrawerToggle} />
-        {/* <Sidebar mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} /> */}
         <Switch>
           <Route exact path="/">
             <Products products={products} onAddToCart={handleAddToCart} handleUpdateCartQty />
@@ -93,43 +90,9 @@ const App = () => {
           <Route exact path="/cart">
             <Cart cart={cart} onUpdateCartQty={handleUpdateCartQty} onRemoveFromCart={handleRemoveFromCart} onEmptyCart={handleEmptyCart} />
           </Route>
-          {/* <Route path="/checkout" exact>
-                <Checkout
-                history={history}
-                cart={cart}
-                onCaptureCheckout={handleCaptureCheckout}
-                />
-            </Route> */}
           <Route path="/checkout" exact>
-            <CheckoutMUI cart={cart} order={order} onCaptureCheckout={handleCaptureCheckout} />
+            <Checkout cart={cart} order={order} onCaptureCheckout={handleCaptureCheckout} />
           </Route>
-
-          {/* <Route
-            path="/checkout"
-            exact
-            render={(props) => (
-              <Checkout1
-                {...props}
-                cart={cart}
-                onCaptureCheckout={handleCaptureCheckout}
-              />
-            )}
-          /> */}
-          {/* <Route
-            path="/confirmation"
-            exact
-            render={(props) => {
-              if (!order) {
-                return props.history.push('/');
-              }
-              return (
-                <Confirmation
-                  {...props}
-                  order={order}
-                />
-              );
-            }}
-          /> */}
         </Switch>
       </div>
     </Router>

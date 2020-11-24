@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Badge, MenuItem, Menu, Typography } from '@material-ui/core';
-import { Menu as MenuIcon, MoreVert as More, ShoppingCart } from '@material-ui/icons';
+import { ShoppingCart } from '@material-ui/icons';
 import { Link, useLocation } from 'react-router-dom';
 
 import useStyles from './styles';
 
 import logo from '../../assets/commerce.png';
 
-const PrimarySearchAppBar = ({ handleDrawerToggle, totalItems }) => {
+const PrimarySearchAppBar = ({ totalItems }) => {
   const classes = useStyles();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const location = useLocation();
@@ -15,8 +15,6 @@ const PrimarySearchAppBar = ({ handleDrawerToggle, totalItems }) => {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleMobileMenuClose = () => setMobileMoreAnchorEl(null);
-
-  const handleMobileMenuOpen = (event) => setMobileMoreAnchorEl(event.currentTarget);
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
 
@@ -37,11 +35,8 @@ const PrimarySearchAppBar = ({ handleDrawerToggle, totalItems }) => {
     <>
       <AppBar position="fixed" className={classes.appBar} color="inherit">
         <Toolbar>
-          {/* <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} className={classes.menuButton}>
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant="h6" className={classes.title}>
-            <img src={logo} height="25px" className={classes.image} /> Commerce.js
+            <img src={logo} alt="commerce.js" height="25px" className={classes.image} /> Commerce.js
           </Typography>
           <div className={classes.grow} />
           {location.pathname === '/' && (
@@ -62,11 +57,6 @@ const PrimarySearchAppBar = ({ handleDrawerToggle, totalItems }) => {
             </IconButton>
           </div>
           )}
-          {/* <div className={classes.sectionMobile}>
-            <IconButton aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
-              <More />
-            </IconButton>
-          </div> */}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

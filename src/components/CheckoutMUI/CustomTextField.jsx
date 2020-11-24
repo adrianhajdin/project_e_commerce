@@ -3,7 +3,7 @@ import { useFormContext, Controller } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 
-function FormInput({ name, label, required, errorobj }) {
+function FormInput({ name, label, required }) {
   const { control } = useFormContext();
   const isError = false;
   const errorMessage = '';
