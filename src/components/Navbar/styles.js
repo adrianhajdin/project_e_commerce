@@ -19,7 +19,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 //   },
 // }));
 
-const drawerWidth = 240;
+const drawerWidth = 0;
 export default makeStyles((theme) => ({
   appBar: {
     boxShadow: 'none',
@@ -28,6 +28,14 @@ export default makeStyles((theme) => ({
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
+  },
+  title: {
+    flexGrow: 1,
+    alignItems: 'center',
+    display: 'flex',
+  },
+  image: {
+    marginRight: '10px',
   },
   menuButton: {
     marginRight: theme.spacing(2),

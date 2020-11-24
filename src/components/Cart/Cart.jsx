@@ -26,18 +26,20 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
           </Grid>
         ))}
       </Grid>
-      <Paper elevation={0} style={{ display: 'flex' }}>
-        <Typography variant="h4">Subtotal: {cart.subtotal.formatted_with_symbol}</Typography>
-        <Button type="button" variant="contained" color="secondary" onClick={handleEmptyCart}>Empty cart</Button>
-        <Button component={Link} to="/checkout" type="button" variant="contained" color="primary">Checkout</Button>
-      </Paper>
+      <div style={{ display: 'flex', marginTop: '10%', width: '100%', justifyContent: 'space-between' }}>
+        <Typography variant="h402020">Subtotal: {cart.subtotal.formatted_with_symbol}</Typography>
+        <div>
+          <Button style={{ marginRight: '20px' }} size="large" type="button" variant="contained" color="secondary" onClick={handleEmptyCart}>Empty cart</Button>
+          <Button component={Link} to="/checkout" size="large" type="button" variant="contained" color="primary">Checkout</Button>
+        </div>
+      </div>
     </>
   );
 
   return (
     <Container>
       <div className={classes.toolbar} />
-      <Typography variant="h4" gutterBottom>Your Shopping Cart</Typography>
+      <Typography className={classes.title} variant="h3" gutterBottom>Your Shopping Cart</Typography>
       { !cart.line_items.length ? renderEmptyCart() : renderCart() }
     </Container>
   );

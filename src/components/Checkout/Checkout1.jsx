@@ -37,7 +37,8 @@ class Checkout extends Component {
   }
 
   componentDidMount() {
-    this.generateCheckoutToken().then(() => this.fetchSubdivisions(this.state.shippingCountry));
+    this.generateCheckoutToken()
+      .then(() => this.fetchSubdivisions(this.state.shippingCountry));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -46,20 +47,23 @@ class Checkout extends Component {
     }
   }
 
+  // separate token and shipping
+
   /**
     *  Generates a checkout token
     *  https://commercejs.com/docs/sdk/checkout#generate-token
     */
   generateCheckoutToken() {
     const { cart } = this.props;
-    if (cart.line_items.length) {
+
+    if (cart.line_items && cart.line_items.length) {
       return commerce.checkout.generateToken(cart.id, { type: 'cart' })
-        .then((token) => this.setState({ checkoutToken: token }))
-        .then(() => this.fetchShippingCountries(this.state.checkoutToken.id))
-        .then(() => this.fetchShippingOptions(this.state.checkoutToken.id, this.state.shippingCountry, this.state.shippingStateProvince))
-        .catch((error) => {
-          console.log('There was an error in generating a token', error);
-        });
+        .then((token) => this.setState({ checkoutToken: token })
+          .then(() => this.fetchShippingCountries(this.state.checkoutToken.id))
+          .then(() => this.fetchShippingOptions(this.state.checkoutToken.id, this.state.shippingCountry, this.state.shippingStateProvince))
+          .catch((error) => {
+            console.log('There was an error in generating a token', error);
+          }));
     }
   }
 
@@ -263,6 +267,10 @@ class Checkout extends Component {
 
   renderCheckoutSummary() {
     const { cart } = this.props;
+
+    if (!cart.line_items) {
+      return 'Loading...';
+    }
 
     return (
       <>

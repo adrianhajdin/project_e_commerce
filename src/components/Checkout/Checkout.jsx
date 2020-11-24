@@ -34,8 +34,6 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
   const fetchShippingCountries = async (checkoutTokenId) => {
     const countries = await commerce.services.localeListShippingCountries(checkoutTokenId);
 
-    console.log(countries);
-
     setState({ ...state, shippingCountries: countries.countries });
 
     // return countries.countries;
@@ -65,12 +63,9 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
       return commerce.checkout.generateToken(cart.id, { type: 'cart' })
         .then((token) => {
           setState({ ...state, checkoutToken: token });
-          console.log(1, token);
           tokenn = token;
         })
         .then(() => {
-          console.log(2, tokenn);
-          console.log(2, state.checkoutToken);
           fetchShippingCountries(tokenn.id);
         })
         .catch((error) => {
@@ -79,9 +74,12 @@ const Checkout = ({ cart, onCaptureCheckout }) => {
     }
   };
 
+  // !! split into event handlers when the country is chosen
   useEffect(() => {
     console.log(1, state.checkoutToken);
-    generateCheckoutToken().then(() => fetchSubdivisions(state.shippingCountry)).then(() => fetchShippingOptions(tokenn.id, state.shippingCountry, state.shippingStateProvince));
+    generateCheckoutToken()
+      .then(() => fetchSubdivisions(state.shippingCountry))
+      .then(() => fetchShippingOptions(tokenn.id, state.shippingCountry, state.shippingStateProvince));
     console.log(2, state.checkoutToken);
   }, []);
 

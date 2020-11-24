@@ -12,7 +12,7 @@ const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
 
   return (
     <Card className="cart-item">
-      <CardMedia image={item.media.source} alt={item.name} style={{ height: 140 }} />
+      <CardMedia image={item.media.source} alt={item.name} className={classes.media} />
       <CardContent style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h4">{item.name}</Typography>
         <Typography variant="h5">{item.line_total.formatted_with_symbol}</Typography>
