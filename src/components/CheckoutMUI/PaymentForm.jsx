@@ -33,8 +33,6 @@ const PaymentForm = ({ checkoutToken, nextStep, backStep, shippingData, onCaptur
         },
       };
 
-      console.log(orderData);
-
       onCaptureCheckout(checkoutToken.id, orderData);
 
       nextStep();
@@ -52,7 +50,7 @@ const PaymentForm = ({ checkoutToken, nextStep, backStep, shippingData, onCaptur
             <CardElement />
             <br /> <br />
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-
+              {console.log(checkoutToken)}
               <Button variant="outlined" onClick={backStep}>Back</Button>
               <Button type="submit" variant="contained" disabled={!stripe} color="primary">
                 Pay {checkoutToken.live.subtotal.formatted_with_symbol}
