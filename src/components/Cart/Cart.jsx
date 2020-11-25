@@ -9,7 +9,7 @@ const Cart = ({ cart, onUpdateCartQty, onRemoveFromCart, onEmptyCart }) => {
   const classes = useStyles();
 
   const handleEmptyCart = () => onEmptyCart();
-  const renderEmptyCart = () => <p>You have no items in your shopping cart, start adding some!</p>;
+  const renderEmptyCart = () => <Typography variant="subtitle1">You have no items in your shopping cart, <Link style={{ textDecoration: 'none' }} to="/">start adding some</Link>!</Typography>;
   if (!cart.line_items) return 'Loading';
 
   const renderCart = () => (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardMedia, CardContent, CardActions, Typography, IconButton } from '@material-ui/core';
-import { ShoppingBasket, AddShoppingCart } from '@material-ui/icons';
+import { AddShoppingCart } from '@material-ui/icons';
 
 import useStyles from './styles';
 
@@ -21,19 +21,11 @@ const Product = ({ product, onAddToCart }) => {
             ${product.price.formatted}
           </Typography>
         </div>
-        <Typography
-          dangerouslySetInnerHTML={{ __html: product.description }}
-          variant="body2"
-          color="textSecondary"
-          component="p"
-        />
+        <Typography dangerouslySetInnerHTML={{ __html: product.description }} variant="body2" color="textSecondary" component="p" />
       </CardContent>
-      <CardActions disableSpacing style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <CardActions disableSpacing style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <IconButton aria-label="Add to Cart" onClick={handleAddToCart}>
           <AddShoppingCart />
-        </IconButton>
-        <IconButton aria-label="Buy Now">
-          <ShoppingBasket />
         </IconButton>
       </CardActions>
     </Card>

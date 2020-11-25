@@ -18,6 +18,7 @@ const App = () => {
   const [cart, setCart] = useState({});
   const [order, setOrder] = useState({});
   const classes = useStyles();
+  const [error, setError] = useState('');
 
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
@@ -60,11 +61,16 @@ const App = () => {
   };
 
   const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
-    const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder);
+    try {
+      const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder);
 
-    setOrder(incomingOrder);
+      setOrder(incomingOrder);
 
-    refreshCart();
+      refreshCart();
+    } catch (error) {
+      console.log(error);
+      setError(error.data.error.message);
+    }
     // Send the user to the receipt
     // Store the order in session storage so we can show it again if the
     // user refreshes the page!
@@ -91,7 +97,7 @@ const App = () => {
             <Cart cart={cart} onUpdateCartQty={handleUpdateCartQty} onRemoveFromCart={handleRemoveFromCart} onEmptyCart={handleEmptyCart} />
           </Route>
           <Route path="/checkout" exact>
-            <Checkout cart={cart} order={order} onCaptureCheckout={handleCaptureCheckout} />
+            <Checkout cart={cart} order={order} onCaptureCheckout={handleCaptureCheckout} error={error} />
           </Route>
         </Switch>
       </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { InputLabel, Select, MenuItem, Button } from '@material-ui/core';
-
+import { Link } from 'react-router-dom';
 import { useForm, FormProvider } from 'react-hook-form';
 import FormInput from './CustomTextField';
 import { commerce } from '../../lib/commerce';
@@ -93,7 +93,11 @@ const AddressForm = ({ checkoutToken, test }) => {
               </Select>
             </Grid>
           </Grid>
-          <Button type="submit" variant="contained" color="primary">Next</Button>
+          <br />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button component={Link} variant="outlined" to="/cart">Back to Cart</Button>
+            <Button type="submit" variant="contained" color="primary">Next</Button>
+          </div>
         </form>
       </FormProvider>
     </>
