@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
   title: {
     marginTop: '5%',
   },
-  leftButton: {
+  emptyButton: {
     minWidth: '150px',
     [theme.breakpoints.down('xs')]: {
       marginBottom: '5px',
@@ -14,7 +14,16 @@ export default makeStyles((theme) => ({
       marginRight: '20px',
     },
   },
-  rightButton: {
+  checkoutButton: {
     minWidth: '150px',
+  },
+  link: {
+    textDecoration: 'none',
+  },
+  cardDetails: {
+    display: 'flex',
+    marginTop: '10%',
+    width: '100%',
+    justifyContent: 'space-between',
   },
 }));

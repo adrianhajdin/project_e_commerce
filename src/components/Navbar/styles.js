@@ -1,25 +1,7 @@
 import { makeStyles, fade } from '@material-ui/core/styles';
 
-// const drawerWidth = 240;
-
-// export default makeStyles((theme) => ({
-//   appBar: {
-//     boxShadow: 'none',
-//     borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-//     [theme.breakpoints.up('sm')]: {
-//       width: `calc(100% - ${drawerWidth}px)`,
-//       marginLeft: drawerWidth,
-//     },
-//   },
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-//     [theme.breakpoints.up('sm')]: {
-//       display: 'none',
-//     },
-//   },
-// }));
-
 const drawerWidth = 0;
+
 export default makeStyles((theme) => ({
   appBar: {
     boxShadow: 'none',
@@ -58,7 +40,6 @@ export default makeStyles((theme) => ({
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      // marginLeft: theme.spacing(3),
       width: 'auto',
     },
   },
@@ -82,18 +63,6 @@ export default makeStyles((theme) => ({
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20ch',
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
     },
   },
 }));

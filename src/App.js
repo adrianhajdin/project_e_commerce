@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { Navbar, Products, Cart, Checkout } from './components';
 import { commerce } from './lib/commerce';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-  },
-}));
-
 const App = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState({});
   const [order, setOrder] = useState({});
-  const classes = useStyles();
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
@@ -68,13 +60,8 @@ const App = () => {
 
       refreshCart();
     } catch (error) {
-      console.log(error);
-      setError(error.data.error.message);
+      setErrorMessage(error.data.error.message);
     }
-    // Send the user to the receipt
-    // Store the order in session storage so we can show it again if the
-    // user refreshes the page!
-    window.sessionStorage.setItem('order_receipt', JSON.stringify(order));
   };
 
   useEffect(() => {
@@ -86,7 +73,7 @@ const App = () => {
 
   return (
     <Router>
-      <div className={classes.root}>
+      <div style={{ display: 'flex' }}>
         <CssBaseline />
         <Navbar totalItems={cart.total_items} handleDrawerToggle={handleDrawerToggle} />
         <Switch>
@@ -97,7 +84,7 @@ const App = () => {
             <Cart cart={cart} onUpdateCartQty={handleUpdateCartQty} onRemoveFromCart={handleRemoveFromCart} onEmptyCart={handleEmptyCart} />
           </Route>
           <Route path="/checkout" exact>
-            <Checkout cart={cart} order={order} onCaptureCheckout={handleCaptureCheckout} error={error} />
+            <Checkout cart={cart} order={order} onCaptureCheckout={handleCaptureCheckout} error={errorMessage} />
           </Route>
         </Switch>
       </div>

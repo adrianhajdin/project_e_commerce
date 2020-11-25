@@ -13,7 +13,7 @@ const Product = ({ product, onAddToCart }) => {
     <Card className={classes.root}>
       <CardMedia className={classes.media} image={product.media.source} title={product.name} />
       <CardContent>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className={classes.cardContent}>
           <Typography gutterBottom variant="h5" component="h2">
             {product.name}
           </Typography>
@@ -23,7 +23,7 @@ const Product = ({ product, onAddToCart }) => {
         </div>
         <Typography dangerouslySetInnerHTML={{ __html: product.description }} variant="body2" color="textSecondary" component="p" />
       </CardContent>
-      <CardActions disableSpacing style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <CardActions disableSpacing className={classes.cardActions}>
         <IconButton aria-label="Add to Cart" onClick={handleAddToCart}>
           <AddShoppingCart />
         </IconButton>

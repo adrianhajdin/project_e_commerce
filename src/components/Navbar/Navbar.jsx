@@ -3,13 +3,12 @@ import { AppBar, Toolbar, IconButton, Badge, MenuItem, Menu, Typography } from '
 import { ShoppingCart } from '@material-ui/icons';
 import { Link, useLocation } from 'react-router-dom';
 
+import logo from '../../assets/commerce.png';
 import useStyles from './styles';
 
-import logo from '../../assets/commerce.png';
-
 const PrimarySearchAppBar = ({ totalItems }) => {
-  const classes = useStyles();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const classes = useStyles();
   const location = useLocation();
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -40,16 +39,7 @@ const PrimarySearchAppBar = ({ totalItems }) => {
           </Typography>
           <div className={classes.grow} />
           {location.pathname === '/' && (
-          <div className={`${classes.sectionDesktop} ${classes.sectionMobile}`}>
-            <IconButton component={Link} to="/cart" aria-label="Show cart items" color="inherit">
-              <Badge badgeContent={totalItems} color="secondary">
-                <ShoppingCart />
-              </Badge>
-            </IconButton>
-          </div>
-          )}
-          {location.pathname === '/' && (
-          <div className={`${classes.sectionDesktop}`}>
+          <div className={classes.button}>
             <IconButton component={Link} to="/cart" aria-label="Show cart items" color="inherit">
               <Badge badgeContent={totalItems} color="secondary">
                 <ShoppingCart />

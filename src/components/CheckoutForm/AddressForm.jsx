@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { InputLabel, Select, MenuItem, Button } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { InputLabel, Select, MenuItem, Button, Grid, Typography } from '@material-ui/core';
 import { useForm, FormProvider } from 'react-hook-form';
-import FormInput from './CustomTextField';
+import { Link } from 'react-router-dom';
+
 import { commerce } from '../../lib/commerce';
+import FormInput from './CustomTextField';
 
 const AddressForm = ({ checkoutToken, test }) => {
-  const methods = useForm();
   const [shippingCountries, setShippingCountries] = useState([]);
   const [shippingCountry, setShippingCountry] = useState('');
   const [shippingSubdivisions, setShippingSubdivisions] = useState([]);
   const [shippingSubdivision, setShippingSubdivision] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [shippingOption, setShippingOption] = useState('');
+  const methods = useForm();
 
   const fetchShippingCountries = async (checkoutTokenId) => {
     const { countries } = await commerce.services.localeListShippingCountries(checkoutTokenId);
@@ -58,7 +57,7 @@ const AddressForm = ({ checkoutToken, test }) => {
             <FormInput required name="firstName" label="First name" />
             <FormInput required name="lastName" label="Last name" />
             <FormInput required name="address1" label="Address line 1" />
-            <FormInput name="email" label="Email" />
+            <FormInput required name="email" label="Email" />
             <FormInput required name="city" label="City" />
             <FormInput required name="zip" label="Zip / Postal code" />
             <Grid item xs={12} sm={6}>
@@ -84,8 +83,7 @@ const AddressForm = ({ checkoutToken, test }) => {
             <Grid item xs={12} sm={6}>
               <InputLabel>Shipping Options</InputLabel>
               <Select value={shippingOption} fullWidth onChange={(e) => setShippingOption(e.target.value)}>
-                {shippingOptions.map((sO) => ({ id: sO.id, label: `${sO.description} - (${sO.price.formatted_with_symbol})`,
-                })).map((item) => (
+                {shippingOptions.map((sO) => ({ id: sO.id, label: `${sO.description} - (${sO.price.formatted_with_symbol})` })).map((item) => (
                   <MenuItem key={item.id} value={item.id}>
                     {item.label}
                   </MenuItem>

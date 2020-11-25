@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { CssBaseline, Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
+
+import { commerce } from '../../../lib/commerce';
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 import useStyles from './styles';
-import { commerce } from '../../../lib/commerce';
 
 const steps = ['Shipping address', 'Payment details'];
 
@@ -26,7 +27,6 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
 
           setCheckoutToken(token);
         } catch {
-          console.log(activeStep, steps.length);
           if (activeStep !== steps.length) history.push('/');
         }
       };
@@ -42,23 +42,26 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
   };
 
   let Confirmation = () => (order.customer ? (
-    <div>
+    <>
       <div>
-        <Typography variant="h5">Thank you for your purchase, {order?.customer?.firstname} {order?.customer?.lastname}!</Typography>
-        <Divider style={{ margin: '20px 0' }} />
-        <Typography variant="subtitle2">Order ref: {order?.customer_reference}</Typography>
+        <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}!</Typography>
+        <Divider className={classes.divider} />
+        <Typography variant="subtitle2">Order ref: {order.customer_reference}</Typography>
       </div>
       <br />
       <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
+    </>
+  ) : (
+    <div className={classes.spinner}>
+      <CircularProgress />
     </div>
-  ) : <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><CircularProgress /></div>);
+  ));
 
   if (error) {
     Confirmation = () => (
       <>
         <Typography variant="h5">Error: {error}</Typography>
         <br />
-
         <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
       </>
     );
@@ -74,7 +77,7 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
       <div className={classes.toolbar} />
       <main className={classes.layout}>
         <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">Checkout</Typography>
+          <Typography variant="h4" align="center">Checkout</Typography>
           <Stepper activeStep={activeStep} className={classes.stepper}>
             {steps.map((label) => (
               <Step key={label}>
@@ -82,13 +85,7 @@ const Checkout = ({ cart, onCaptureCheckout, order, error }) => {
               </Step>
             ))}
           </Stepper>
-          <>
-            {
-            activeStep === steps.length
-              ? <Confirmation />
-              : checkoutToken && <Form />
-            }
-          </>
+          {activeStep === steps.length ? <Confirmation /> : checkoutToken && <Form />}
         </Paper>
       </main>
     </>
