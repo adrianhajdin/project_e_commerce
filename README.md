@@ -1,8 +1,11 @@
-# E-commerce
+# E-Commerce
+### [Live Site](https://realtime-chat-application.netlify.com)
 
-<!-- https://live.hasthemes.com/html/7/helendo-preview/helendo/shop-left-sidebar.html -->
-<!-- https://material-ui.com/components/drawers/#full-height-navigation -->
-<!-- https://commercejs.com/docs/guides/products-react -->
+![eCommerce](https://i.ibb.co/mH9SNNq/Build-an-e-commerce-1.png)
 
-<!-- Problem when choosing european zipcone but country us -->
-<!-- Form validation -->
+## Introduction
+This is a code repository for the corresponding video tutorial. 
+
+In this video, we're going to build a fully functional eCommerce application using commerce.js. 
+
+While building it you're going to learn many advanced React & JavaScript topics, as well as how to use Stripe for card transactions. On top of that, at the end of the video, you will have this unique and complex webshop app that you will be able to add to your portfolio. And trust me, e-commerce applications are impressive. 
