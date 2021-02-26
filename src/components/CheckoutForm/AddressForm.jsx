@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { commerce } from '../../lib/commerce';
 import FormInput from './CustomTextField';
+import SelectInput from './SelectInput';
 
 const AddressForm = ({ checkoutToken, test }) => {
   const [shippingCountries, setShippingCountries] = useState([]);
@@ -60,36 +61,33 @@ const AddressForm = ({ checkoutToken, test }) => {
             <FormInput required name="email" label="Email" />
             <FormInput required name="city" label="City" />
             <FormInput required name="zip" label="Zip / Postal code" />
-            <Grid item xs={12} sm={6}>
-              <InputLabel>Shipping Country</InputLabel>
-              <Select value={shippingCountry} fullWidth onChange={(e) => setShippingCountry(e.target.value)}>
-                {Object.entries(shippingCountries).map(([code, name]) => ({ id: code, label: name })).map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputLabel>Shipping Subdivision</InputLabel>
-              <Select value={shippingSubdivision} fullWidth onChange={(e) => setShippingSubdivision(e.target.value)}>
-                {Object.entries(shippingSubdivisions).map(([code, name]) => ({ id: code, label: name })).map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputLabel>Shipping Options</InputLabel>
-              <Select value={shippingOption} fullWidth onChange={(e) => setShippingOption(e.target.value)}>
-                {shippingOptions.map((sO) => ({ id: sO.id, label: `${sO.description} - (${sO.price.formatted_with_symbol})` })).map((item) => (
-                  <MenuItem key={item.id} value={item.id}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
+            <SelectInput
+            label="Shipping Country"
+            value={shippingCountry}
+            onChange={(e) => setShippingCountry(e.target.value)}
+            options={Object.entries(
+              shippingCountries
+            ).map(([code, name]) => ({ id: code, label: name }))}
+          />
+          <SelectInput
+            label="Shipping Subdivision"
+            value={shippingSubDivision}
+            onChange={(e) => setShippingSubDivision(e.target.value)}
+            options={Object.entries(
+              shippingSubDivisions
+            ).map(([code, name]) => ({ id: code, label: name }))}
+          />
+
+          <SelectInput
+            label="Shipping Option"
+            value={shippingOption}
+            onChange={(e) => setShippingOption(e.target.value)}
+            options={shippingOptions.map(({ id, description, price }) => ({
+              id,
+              label: `${description} - (${price.formatted_with_symbol})`,
+            }))}
+          />
+           
           </Grid>
           <br />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
