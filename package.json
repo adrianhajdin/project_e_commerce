@@ -28,9 +28,6 @@
     "eject": "react-scripts eject",
     "format": "prettier --write ./src"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -44,11 +41,6 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.5.0",
     "typescript": "^3.9.10"
   }
