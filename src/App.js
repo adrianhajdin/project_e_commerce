@@ -24,26 +24,25 @@ const App = () => {
 
   const handleAddToCart = async (productId, quantity) => {
     const item = await commerce.cart.add(productId, quantity);
-
-    setCart(item.cart);
+    setCart(item);
   };
 
   const handleUpdateCartQty = async (lineItemId, quantity) => {
     const response = await commerce.cart.update(lineItemId, { quantity });
 
-    setCart(response.cart);
+    setCart(response);
   };
 
   const handleRemoveFromCart = async (lineItemId) => {
     const response = await commerce.cart.remove(lineItemId);
 
-    setCart(response.cart);
+    setCart(response);
   };
 
   const handleEmptyCart = async () => {
     const response = await commerce.cart.empty();
 
-    setCart(response.cart);
+    setCart(response);
   };
 
   const refreshCart = async () => {
@@ -70,7 +69,6 @@ const App = () => {
   }, []);
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
-
   return (
     <Router>
       <div style={{ display: 'flex' }}>
